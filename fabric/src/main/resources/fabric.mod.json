@@ -28,6 +28,7 @@
     "fabric-api": "*",
     "minecraft": "${minecraft_version}",
     "embeddium": ">=0.3.17",
+    "cloth-config": ">=14.0.126",
     "java": ">=${java_version}"
   }
 }
