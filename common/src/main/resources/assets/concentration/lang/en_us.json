@@ -6,7 +6,6 @@
   "concentration.options.general.attach_mode.desc": "How fullscreen shortcut works.",
   "concentration.options.attach_mode.attach": "Attach",
   "concentration.options.attach_mode.replace": "Replace",
-  "concentration.options.attach_mode.off": "Off",
   "concentration.options.fullscreen.windowed": "Windowed",
   "concentration.options.fullscreen.borderless": "Borderless"
 }
