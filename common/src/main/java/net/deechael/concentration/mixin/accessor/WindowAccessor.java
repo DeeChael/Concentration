@@ -1,11 +1,11 @@
-package net.deechael.concentration.mixin.accessors;
+package net.deechael.concentration.mixin.accessor;
 
 import com.mojang.blaze3d.platform.Window;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Window.class)
-public interface MainWindowAccessor {
+public interface WindowAccessor {
 
     @Accessor
     void setDirty(boolean value);

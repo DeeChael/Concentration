@@ -1,4 +1,4 @@
-package net.deechael.concentration.fabric.integration;
+package net.deechael.concentration.fabric.integration.embeddium;
 
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
 import net.deechael.concentration.fabric.ConcentrationFabric;

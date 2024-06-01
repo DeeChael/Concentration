@@ -8,8 +8,7 @@
     "${mod_author}"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/DeeChael/Concentration"
   },
   "license": "${license}",
   "icon": "logo.png",

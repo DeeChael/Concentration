@@ -7,6 +7,6 @@ public class ConcentrationConstants {
 
     public static final String MOD_ID = "concentration";
     public static final String MOD_NAME = "Concentration";
-    public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
 }

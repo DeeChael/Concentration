@@ -1,6 +1,6 @@
 package net.deechael.concentration.mixin;
 
-import net.deechael.concentration.FullScreenMode;
+import net.deechael.concentration.FullscreenMode;
 import net.deechael.concentration.platform.Services;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
@@ -22,9 +22,9 @@ public class KeyboardHandlerMixin {
     public void redirect$handleFullScreenToggle(long pWindowPointer, int pKey, int pScanCode, int pAction, int pModifiers, CallbackInfo ci) {
         switch (Services.PLATFORM.getConfig().getAttachMode()) {
             case ATTACH ->
-                    Services.PLATFORM.getConfig().setFullScreenMode(minecraft.options, FullScreenMode.nextOf(Services.PLATFORM.getConfig().getFullScreenMode()));
+                    Services.PLATFORM.getConfig().setFullScreenMode(minecraft.options, FullscreenMode.nextOf(Services.PLATFORM.getConfig().getFullScreenMode()));
             case REPLACE ->
-                    Services.PLATFORM.getConfig().setFullScreenMode(minecraft.options, FullScreenMode.nextBorderless(Services.PLATFORM.getConfig().getFullScreenMode()));
+                    Services.PLATFORM.getConfig().setFullScreenMode(minecraft.options, FullscreenMode.nextBorderless(Services.PLATFORM.getConfig().getFullScreenMode()));
         }
         ci.cancel();
     }

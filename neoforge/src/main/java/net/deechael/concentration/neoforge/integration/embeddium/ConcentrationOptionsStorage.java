@@ -1,4 +1,4 @@
-package net.deechael.concentration.neoforge.integration;
+package net.deechael.concentration.neoforge.integration.embeddium;
 
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
 import net.deechael.concentration.neoforge.NeoForgeConcentrationConfig;

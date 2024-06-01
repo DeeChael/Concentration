@@ -1,10 +1,15 @@
 package net.deechael.concentration;
 
-public enum FullScreenMode {
+public enum FullscreenMode {
 
-    WINDOWED, BORDERLESS, FULLSCREEN;
+    // Vanilla windowed mode
+    WINDOWED,
+    // Mod provided borderless window to simulate fullscreen visual
+    BORDERLESS,
+    // Vanilla fullscreen mode
+    FULLSCREEN;
 
-    public static FullScreenMode nextOf(FullScreenMode current) {
+    public static FullscreenMode nextOf(FullscreenMode current) {
         return switch (current) {
             case WINDOWED -> BORDERLESS;
             case BORDERLESS -> FULLSCREEN;
@@ -12,7 +17,7 @@ public enum FullScreenMode {
         };
     }
 
-    public static FullScreenMode nextBorderless(FullScreenMode current) {
+    public static FullscreenMode nextBorderless(FullscreenMode current) {
         return switch (current) {
             case FULLSCREEN, BORDERLESS -> WINDOWED;
             case WINDOWED -> BORDERLESS;

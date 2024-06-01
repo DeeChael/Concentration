@@ -8,7 +8,7 @@
   "client": [
     "KeyboardHandlerMixin",
     "WindowMixin",
-    "accessors.MainWindowAccessor"
+    "accessor.WindowAccessor"
   ],
   "server": [],
   "injectors": {

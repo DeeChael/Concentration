@@ -2,7 +2,7 @@ package net.deechael.concentration.fabric;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
-import net.deechael.concentration.fabric.integration.ConcentrationOptions;
+import net.deechael.concentration.fabric.integration.embeddium.ConcentrationOptions;
 import net.fabricmc.api.ClientModInitializer;
 
 public class ConcentrationFabric implements ClientModInitializer {

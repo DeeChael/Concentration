@@ -1,4 +1,4 @@
-package net.deechael.concentration.neoforge.integration;
+package net.deechael.concentration.fabric.integration.embeddium;
 
 import com.google.common.collect.ImmutableList;
 import me.jellysquid.mods.sodium.client.gui.options.OptionGroup;
@@ -7,8 +7,8 @@ import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
 import me.jellysquid.mods.sodium.client.gui.options.control.CyclingControl;
 import net.deechael.concentration.AttachMode;
 import net.deechael.concentration.ConcentrationConstants;
-import net.deechael.concentration.FullScreenMode;
-import net.deechael.concentration.neoforge.NeoForgeConcentrationConfig;
+import net.deechael.concentration.FullscreenMode;
+import net.deechael.concentration.fabric.ConcentrationFabric;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -30,17 +30,17 @@ public class ConcentrationOptionPage extends OptionPage {
 
         groups.add(OptionGroup.createBuilder()
                 .add(
-                        OptionImpl.createBuilder(FullScreenMode.class, ConcentrationOptions.STORAGE)
+                        OptionImpl.createBuilder(FullscreenMode.class, ConcentrationOptions.STORAGE)
                                 .setId(new ResourceLocation(ConcentrationConstants.MOD_ID, "fullscreen"))
                                 .setName(Component.translatable("concentration.options.general.fullscreen.title"))
                                 .setTooltip(Component.translatable("concentration.options.general.fullscreen.desc"))
-                                .setControl((opt) -> new CyclingControl<>(opt, FullScreenMode.class, new Component[]{
+                                .setControl((opt) -> new CyclingControl<>(opt, FullscreenMode.class, new Component[]{
                                         Component.translatable("concentration.options.fullscreen.windowed"),
                                         Component.translatable("concentration.options.fullscreen.borderless"),
                                         Component.translatable("options.fullscreen")
                                 }))
-                                .setBinding((options, value) -> NeoForgeConcentrationConfig.INSTANCE.setFullScreenMode(Minecraft.getInstance().options, value),
-                                        (options) -> NeoForgeConcentrationConfig.FULL_SCREEN_MODE.get())
+                                .setBinding((options, value) -> ConcentrationFabric.CONFIG.setFullScreenMode(Minecraft.getInstance().options, value),
+                                        (options) -> ConcentrationFabric.CONFIG.fullScreenMode)
                                 .build()
                 )
                 .add(
@@ -52,8 +52,11 @@ public class ConcentrationOptionPage extends OptionPage {
                                         Component.translatable("concentration.options.attach_mode.attach"),
                                         Component.translatable("concentration.options.attach_mode.replace")
                                 }))
-                                .setBinding((options, value) -> NeoForgeConcentrationConfig.ATTACH_MODE.set(value),
-                                        (options) -> NeoForgeConcentrationConfig.ATTACH_MODE.get())
+                                .setBinding((options, value) -> {
+                                            ConcentrationFabric.CONFIG.attachMode = value;
+                                            ConcentrationFabric.CONFIG.save();
+                                        },
+                                        (options) -> ConcentrationFabric.CONFIG.attachMode)
                                 .build()
                 )
                 .build()

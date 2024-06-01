@@ -5,9 +5,9 @@ import com.electronwill.nightconfig.core.io.WritingMode;
 import com.mojang.blaze3d.platform.Window;
 import net.deechael.concentration.AttachMode;
 import net.deechael.concentration.ConcentrationConstants;
-import net.deechael.concentration.FullScreenMode;
+import net.deechael.concentration.FullscreenMode;
 import net.deechael.concentration.config.ConcentrationConfig;
-import net.deechael.concentration.mixin.accessors.MainWindowAccessor;
+import net.deechael.concentration.mixin.accessor.WindowAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.neoforged.fml.loading.FMLPaths;
@@ -20,7 +20,7 @@ public class NeoForgeConcentrationConfig implements ConcentrationConfig {
     public final static NeoForgeConcentrationConfig INSTANCE = new NeoForgeConcentrationConfig();
 
     public static final ModConfigSpec SPECS;
-    public static final ModConfigSpec.EnumValue<FullScreenMode> FULL_SCREEN_MODE;
+    public static final ModConfigSpec.EnumValue<FullscreenMode> FULL_SCREEN_MODE;
     public static final ModConfigSpec.EnumValue<AttachMode> ATTACH_MODE;
 
     private static boolean loaded = false;
@@ -33,7 +33,7 @@ public class NeoForgeConcentrationConfig implements ConcentrationConfig {
         builder.push("general");
 
         FULL_SCREEN_MODE = builder.comment("Full screen mode to use", "WINDOWED for window mode", "FULLSCREEN for vanilla full screen mode", "BORDERLESS for borderless screen mode")
-                .defineEnum("fullscreen", FullScreenMode.WINDOWED);
+                .defineEnum("fullscreen", FullscreenMode.WINDOWED);
 
         ATTACH_MODE = builder
                 .comment("The action when use the fullscreen key short.")
@@ -52,7 +52,7 @@ public class NeoForgeConcentrationConfig implements ConcentrationConfig {
         if (loaded)
             return;
 
-        ConcentrationConstants.LOG.info("Loading Concentration Config");
+        ConcentrationConstants.LOGGER.info("Loading Concentration Config");
 
         Path path = FMLPaths.CONFIGDIR.get().resolve("concentration-client.toml");
         CommentedFileConfig config = CommentedFileConfig.builder(path)
@@ -72,17 +72,16 @@ public class NeoForgeConcentrationConfig implements ConcentrationConfig {
     }
 
     @Override
-    public FullScreenMode getFullScreenMode() {
+    public FullscreenMode getFullScreenMode() {
         return FULL_SCREEN_MODE.get();
     }
 
     @Override
-    public void setFullScreenMode(Options options, FullScreenMode fullScreenMode) {
+    public void setFullScreenMode(Options options, FullscreenMode fullScreenMode) {
         FULL_SCREEN_MODE.set(fullScreenMode);
-        options.fullscreen().set(fullScreenMode != FullScreenMode.WINDOWED);
+        options.fullscreen().set(fullScreenMode != FullscreenMode.WINDOWED);
 
-        Minecraft client = Minecraft.getInstance();
-        Window window = client.getWindow();
+        Window window = Minecraft.getInstance().getWindow();
 
         if (window.isFullscreen() != options.fullscreen().get()) {
             window.toggleFullScreen();
@@ -90,7 +89,7 @@ public class NeoForgeConcentrationConfig implements ConcentrationConfig {
         }
 
         if (options.fullscreen().get()) {
-            ((MainWindowAccessor) (Object) window).setDirty(true);
+            ((WindowAccessor) (Object) window).setDirty(true);
             window.changeFullscreenVideoMode();
         }
     }
