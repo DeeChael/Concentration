@@ -1,11 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.deechael.concentration.mixin",
+  "package": "net.deechael.concentration.fabric.mixin",
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "client": [
+    "SodiumVideoOptionsScreenMixin"
   ],
   "server": [],
   "injectors": {
