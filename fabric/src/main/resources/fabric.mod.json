@@ -26,8 +26,10 @@
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": "*",
     "minecraft": "${minecraft_version}",
-    "sodium": ">=0.5.9",
     "java": ">=${java_version}"
+  },
+  "suggests": {
+    "sodium": ">=0.5.9"
   }
 }
   

@@ -5,6 +5,7 @@
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
+  "plugin": "net.deechael.concentration.fabric.ConcentrationFabricMixinPlugin",
   "client": [
     "SodiumVideoOptionsScreenMixin"
   ],
