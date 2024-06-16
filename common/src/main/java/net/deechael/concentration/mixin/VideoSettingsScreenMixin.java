@@ -47,7 +47,7 @@ public class VideoSettingsScreenMixin {
 
     @Unique
     private static OptionInstance<Boolean> concentration$wrapperFullscreen() {
-        return OptionInstance.createBoolean("options.fullscreen", false, (value) -> {
+        return OptionInstance.createBoolean("options.fullscreen", Minecraft.getInstance().options.fullscreen().get(), (value) -> {
             Concentration.toggleFullScreenMode(Minecraft.getInstance().options, value);
         });
     }
