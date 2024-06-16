@@ -15,8 +15,6 @@ public abstract class WindowMixin {
 
     @Shadow private boolean fullscreen;
 
-    @Shadow public abstract Monitor findBestMonitor();
-
     @Shadow @Final private ScreenManager screenManager;
 
     @Redirect(method = "setMode", at = @At(value = "INVOKE", remap = false, target = "Lorg/lwjgl/glfw/GLFW;glfwSetWindowMonitor(JJIIIII)V"))
