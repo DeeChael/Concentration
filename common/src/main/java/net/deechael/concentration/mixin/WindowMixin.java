@@ -33,8 +33,14 @@ public abstract class WindowMixin {
 
         if (this.fullscreen) {
             Monitor monitorInstance = this.screenManager.getMonitor(monitor);
-            GLFW.glfwSetWindowMonitor(window, 0L, monitorInstance.getX(), monitorInstance.getY(), width, height, refreshRate);
+            GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+            // If we make the window not decorated and set the window size exactly the same with the screen size, it will become native fullscreen mode
+            // to prevent this, I enlarge the height by 1 pixel and move up the window by 1 pixel which won't affect anything (unless you have a screen
+            // which is added above the monitor which holds the game) and will have a good experience
+            // Actually this is a little bit dirty, needs to find a better way to solve it
+            GLFW.glfwSetWindowMonitor(window, 0L, monitorInstance.getX(), monitorInstance.getY() - 1, width, height + 1, -1);
         } else {
+            GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_TRUE);
             GLFW.glfwSetWindowMonitor(window, 0L, xpos, ypos, width, height, refreshRate);
         }
     }
