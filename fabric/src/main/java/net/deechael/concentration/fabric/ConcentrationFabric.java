@@ -1,6 +1,8 @@
 package net.deechael.concentration.fabric;
 
+import net.deechael.concentration.fabric.compat.EmbeddiumCompat;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 
 /**
  * Main class for fabric version of Concentration
@@ -10,10 +12,9 @@ public class ConcentrationFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-    }
-
-    private void test(boolean a) {
-
+        if (FabricLoader.getInstance().isModLoaded("embeddium")) {
+            EmbeddiumCompat.init();
+        }
     }
 
 }

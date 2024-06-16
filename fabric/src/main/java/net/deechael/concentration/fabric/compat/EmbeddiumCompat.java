@@ -1,11 +1,11 @@
-package net.deechael.concentration.neoforge.compat;
+package net.deechael.concentration.fabric.compat;
 
 import me.jellysquid.mods.sodium.client.gui.options.OptionImpl;
-import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
-import me.jellysquid.mods.sodium.client.gui.options.storage.MinecraftOptionsStorage;
 import net.deechael.concentration.Concentration;
 import net.minecraft.network.chat.Component;
 import org.embeddedt.embeddium.api.OptionGroupConstructionEvent;
+import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
+import me.jellysquid.mods.sodium.client.gui.options.storage.MinecraftOptionsStorage;
 import org.embeddedt.embeddium.client.gui.options.StandardOptions;
 
 /**

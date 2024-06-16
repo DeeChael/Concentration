@@ -50,7 +50,6 @@ public abstract class WindowMixin {
         return 1L;
     }
 
-    // Pretend to the constructor code (that creates the window) that it is not fullscreen
     @Redirect(method = "<init>",
             at = @At(value = "FIELD", target = "Lcom/mojang/blaze3d/platform/Window;fullscreen:Z", opcode = 0xb4),
             // currentFullscreen still needs to be set correctly

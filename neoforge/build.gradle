@@ -35,5 +35,5 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     implementation "net.neoforged:neoforge:${neoforge_version}"
-    implementation("org.embeddedt:embeddium-1.21:1.0.0-beta.1+mc1.21")
+    implementation("org.embeddedt:embeddium-1.20.6:0.3.20-git-ef611ef+mc1.20.6")
 }
