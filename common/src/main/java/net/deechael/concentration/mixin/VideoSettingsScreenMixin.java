@@ -11,6 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/**
+ * Make vanilla fullscreen option follow Concentration function
+ * @author DeeChael
+ */
 @Mixin(VideoSettingsScreen.class)
 public class VideoSettingsScreenMixin {
 

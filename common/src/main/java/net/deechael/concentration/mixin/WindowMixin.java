@@ -9,13 +9,21 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
 
+/**
+ * Borderless implementation
+ * @author DeeChael
+ */
 @Mixin(Window.class)
 public abstract class WindowMixin {
 
-    @Shadow private boolean fullscreen;
+    @Shadow
+    private boolean fullscreen;
 
-    @Shadow @Final private ScreenManager screenManager;
+    @Shadow
+    @Final
+    private ScreenManager screenManager;
 
     @Redirect(method = "setMode", at = @At(value = "INVOKE", remap = false, target = "Lorg/lwjgl/glfw/GLFW;glfwSetWindowMonitor(JJIIIII)V"))
     private void redirect$glfwSetWindowMonitor(long window, long monitor, int xpos, int ypos, int width, int height, int refreshRate) {
@@ -34,6 +42,22 @@ public abstract class WindowMixin {
     @Redirect(method = "setMode", at = @At(value = "INVOKE", remap = false, target = "Lorg/lwjgl/glfw/GLFW;glfwGetWindowMonitor(J)J"))
     private long redirect$glfwGetWindowMonitor(long window) {
         return 1L;
+    }
+
+    // Pretend to the constructor code (that creates the window) that it is not fullscreen
+    @Redirect(method = "<init>",
+            at = @At(value = "FIELD", target = "Lcom/mojang/blaze3d/platform/Window;fullscreen:Z", opcode = 0xb4),
+            // currentFullscreen still needs to be set correctly
+            slice = @Slice(
+                    from = @At(
+                            value = "FIELD",
+                            target = "Lcom/mojang/blaze3d/platform/Window;actuallyFullscreen:Z",
+                            opcode = 0xb5,
+                            ordinal = 1)
+            )
+    )
+    private boolean constructorIsFullscreen(Window window) {
+        return fullscreen;
     }
 
 }

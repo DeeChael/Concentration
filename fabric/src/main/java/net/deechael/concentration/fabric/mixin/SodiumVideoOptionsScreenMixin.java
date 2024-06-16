@@ -8,6 +8,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Hooks sodium options to make sure that changing fullscreen behaviour will use Concentration function instead of vanilla function
+ * @author DeeChael
+ */
 @Mixin(SodiumGameOptionPages.class)
 public class SodiumVideoOptionsScreenMixin {
 

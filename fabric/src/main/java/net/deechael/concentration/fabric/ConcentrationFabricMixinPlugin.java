@@ -8,6 +8,10 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Mixin plugin to make sure that sodium support only turned on when sodium installed
+ * @author DeeChael
+ */
 public class ConcentrationFabricMixinPlugin implements IMixinConfigPlugin {
 
     @Override

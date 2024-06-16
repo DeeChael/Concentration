@@ -8,6 +8,10 @@ import org.embeddedt.embeddium.api.options.storage.MinecraftOptionsStorage;
 import org.embeddedt.embeddium.api.options.structure.OptionImpl;
 import org.embeddedt.embeddium.api.options.structure.StandardOptions;
 
+/**
+ * Make Embedddium fullscreen option follow Concentration function
+ * @author DeeChael
+ */
 public class EmbeddiumCompat {
 
     public static void init() {
