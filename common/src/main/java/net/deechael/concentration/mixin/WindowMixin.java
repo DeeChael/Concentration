@@ -2,7 +2,6 @@ package net.deechael.concentration.mixin;
 
 import com.mojang.blaze3d.platform.Monitor;
 import com.mojang.blaze3d.platform.ScreenManager;
-import com.mojang.blaze3d.platform.VideoMode;
 import com.mojang.blaze3d.platform.Window;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
@@ -29,9 +28,10 @@ public abstract class WindowMixin {
     private ScreenManager screenManager;
 
     @Unique
-    private boolean cachedSize = false;
+    private boolean concentration$cachedSize = false;
     @Unique
-    private boolean cachedPos = false;
+    private boolean concentration$cachedPos = false;
+    @Unique boolean concentration$cacheSizeLock = false;
 
     @Unique
     private int concentration$cachedX = 0;
@@ -45,7 +45,7 @@ public abstract class WindowMixin {
     @Inject(method = "onMove", at = @At("HEAD"))
     private void inject$onMove$head(long window, int x, int y, CallbackInfo ci) {
         if (!this.fullscreen) {
-            this.cachedPos = true;
+            this.concentration$cachedPos = true;
             this.concentration$cachedX = x;
             this.concentration$cachedY = y;
         }
@@ -53,8 +53,8 @@ public abstract class WindowMixin {
 
     @Inject(method = "onResize", at = @At("HEAD"))
     private void inject$onResize$head(long window, int width, int height, CallbackInfo ci) {
-        if (!this.fullscreen) {
-            this.cachedSize = true;
+        if (!this.fullscreen && !this.concentration$cacheSizeLock) {
+            this.concentration$cachedSize = true;
             this.concentration$cachedWidth = width;
             this.concentration$cachedHeight = height;
         }
@@ -67,6 +67,8 @@ public abstract class WindowMixin {
         }
 
         if (this.fullscreen) {
+            this.concentration$cacheSizeLock = true;
+
             Monitor monitorInstance = this.screenManager.getMonitor(monitor);
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
             // If we make the window not decorated and set the window size exactly the same with the screen size, it will become native fullscreen mode
@@ -76,14 +78,16 @@ public abstract class WindowMixin {
             GLFW.glfwSetWindowMonitor(window, 0L, monitorInstance.getX(), monitorInstance.getY() - 1, width, height + 1, -1);
         } else {
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_TRUE);
-            int finalX = cachedPos ? concentration$cachedX : xpos;
-            int finalY = cachedPos ? concentration$cachedY : ypos;
-            /*
-             borderless fullscreen size will be applied, so needs a better solution
-            int finalWidth = cachedSize ? concentration$cachedWidth : width;
-            int finalHeight = cachedSize ? concentration$cachedHeight : height;*/
 
-            GLFW.glfwSetWindowMonitor(window, 0L, finalX, finalY, width, height, refreshRate);
+            int finalX = concentration$cachedPos ? concentration$cachedX : xpos;
+            int finalY = concentration$cachedPos ? concentration$cachedY : ypos;
+
+            int finalWidth = concentration$cachedSize ? concentration$cachedWidth : width;
+            int finalHeight = concentration$cachedSize ? concentration$cachedHeight : height;
+
+            this.concentration$cacheSizeLock = false;
+
+            GLFW.glfwSetWindowMonitor(window, 0L, finalX, finalY, finalWidth, finalHeight, -1);
 
         }
     }
