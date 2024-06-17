@@ -29,7 +29,36 @@ public abstract class WindowMixin {
     private ScreenManager screenManager;
 
     @Unique
-    private long concentration$lastMonitor = 0;
+    private boolean cachedSize = false;
+    @Unique
+    private boolean cachedPos = false;
+
+    @Unique
+    private int concentration$cachedX = 0;
+    @Unique
+    private int concentration$cachedY = 0;
+    @Unique
+    private int concentration$cachedWidth = 0;
+    @Unique
+    private int concentration$cachedHeight = 0;
+
+    @Inject(method = "onMove", at = @At("HEAD"))
+    private void inject$onMove$head(long window, int x, int y, CallbackInfo ci) {
+        if (!this.fullscreen) {
+            this.cachedPos = true;
+            this.concentration$cachedX = x;
+            this.concentration$cachedY = y;
+        }
+    }
+
+    @Inject(method = "onResize", at = @At("HEAD"))
+    private void inject$onResize$head(long window, int width, int height, CallbackInfo ci) {
+        if (!this.fullscreen) {
+            this.cachedSize = true;
+            this.concentration$cachedWidth = width;
+            this.concentration$cachedHeight = height;
+        }
+    }
 
     @Redirect(method = "setMode", at = @At(value = "INVOKE", remap = false, target = "Lorg/lwjgl/glfw/GLFW;glfwSetWindowMonitor(JJIIIII)V"))
     private void redirect$glfwSetWindowMonitor(long window, long monitor, int xpos, int ypos, int width, int height, int refreshRate) {
@@ -38,7 +67,6 @@ public abstract class WindowMixin {
         }
 
         if (this.fullscreen) {
-            concentration$lastMonitor = monitor;
             Monitor monitorInstance = this.screenManager.getMonitor(monitor);
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
             // If we make the window not decorated and set the window size exactly the same with the screen size, it will become native fullscreen mode
@@ -48,16 +76,15 @@ public abstract class WindowMixin {
             GLFW.glfwSetWindowMonitor(window, 0L, monitorInstance.getX(), monitorInstance.getY() - 1, width, height + 1, -1);
         } else {
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_TRUE);
+            int finalX = cachedPos ? concentration$cachedX : xpos;
+            int finalY = cachedPos ? concentration$cachedY : ypos;
+            /*
+             borderless fullscreen size will be applied, so needs a better solution
+            int finalWidth = cachedSize ? concentration$cachedWidth : width;
+            int finalHeight = cachedSize ? concentration$cachedHeight : height;*/
 
-            Monitor monitorInstance = this.screenManager.getMonitor(concentration$lastMonitor);
+            GLFW.glfwSetWindowMonitor(window, 0L, finalX, finalY, width, height, refreshRate);
 
-            if (monitorInstance != null) {
-                VideoMode mode = monitorInstance.getCurrentMode();
-
-                GLFW.glfwSetWindowMonitor(window, 0L, monitorInstance.getX() + ((mode.getWidth() - width) / 2), monitorInstance.getY() + ((mode.getHeight() - height) / 2), width, height, refreshRate);
-            } else {
-                GLFW.glfwSetWindowMonitor(window, 0L, xpos, ypos, width, height, refreshRate);
-            }
         }
     }
 
