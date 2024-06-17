@@ -73,6 +73,7 @@ public abstract class WindowMixin {
             this.concentration$cacheSizeLock = true;
 
             // Get the monitor the user want to use and get the relative position in the system
+            // The monitor is always non-null because when switching fullscreen mode, there must be a monitor to put the window
             Monitor monitorInstance = this.screenManager.getMonitor(monitor);
 
             // Remove the title bar to prevent that user can see the title bar if they put their monitors vertically connected
