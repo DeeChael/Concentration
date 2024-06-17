@@ -25,7 +25,7 @@ public class KeyboardHandlerMixin {
     public void redirect$handleFullScreenToggle(long pWindowPointer, int pKey, int pScanCode, int pAction, int pModifiers, CallbackInfo ci) {
         Concentration.toggleFullScreenMode(minecraft.options, !minecraft.options.fullscreen().get());
         minecraft.options.save(); // Only keyboard shortcut needs save manually because shortcut won't automatically save
-        ci.cancel();
+        ci.cancel(); // Stop the original toggling function
     }
 
 }

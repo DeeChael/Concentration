@@ -31,7 +31,8 @@ public abstract class WindowMixin {
     private boolean concentration$cachedSize = false;
     @Unique
     private boolean concentration$cachedPos = false;
-    @Unique boolean concentration$cacheSizeLock = false;
+    @Unique
+    private boolean concentration$cacheSizeLock = false;
 
     @Unique
     private int concentration$cachedX = 0;
@@ -67,28 +68,36 @@ public abstract class WindowMixin {
         }
 
         if (this.fullscreen) {
+            // Lock caching, because when switching back, the window will be once resized to the maximum value and the cache value will be wrong
+            // Position won't be affected, so it doesn't need lock
             this.concentration$cacheSizeLock = true;
 
+            // Get the monitor the user want to use and get the relative position in the system
             Monitor monitorInstance = this.screenManager.getMonitor(monitor);
+
+            // Remove the title bar to prevent that user can see the title bar if they put their monitors vertically connected
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+
             // If we make the window not decorated and set the window size exactly the same with the screen size, it will become native fullscreen mode
             // to prevent this, I enlarge the height by 1 pixel and move up the window by 1 pixel which won't affect anything (unless you have a screen
             // which is added above the monitor which holds the game) and will have a good experience
             // Actually this is a little bit dirty, needs to find a better way to solve it
             GLFW.glfwSetWindowMonitor(window, 0L, monitorInstance.getX(), monitorInstance.getY() - 1, width, height + 1, -1);
         } else {
+            // Re-add the title bar so user can move the window and minimize, maximize and close the window
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_TRUE);
 
+            // Make sure that Concentration has cached position and size, because position size won't be cached when the game starting in fullscreen mode
             int finalX = concentration$cachedPos ? concentration$cachedX : xpos;
             int finalY = concentration$cachedPos ? concentration$cachedY : ypos;
 
             int finalWidth = concentration$cachedSize ? concentration$cachedWidth : width;
             int finalHeight = concentration$cachedSize ? concentration$cachedHeight : height;
 
+            // Unlock caching, because user can change the window size now
             this.concentration$cacheSizeLock = false;
 
             GLFW.glfwSetWindowMonitor(window, 0L, finalX, finalY, finalWidth, finalHeight, -1);
-
         }
     }
 

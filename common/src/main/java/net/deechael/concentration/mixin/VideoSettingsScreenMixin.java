@@ -34,7 +34,7 @@ public class VideoSettingsScreenMixin {
                         options.attackIndicator(),
                         options.gamma(),
                         options.cloudStatus(),
-                        concentration$wrapperFullscreen(),
+                        concentration$wrapperFullscreen(options),
                         options.particles(),
                         options.mipmapLevels(),
                         options.entityShadows(),
@@ -50,10 +50,9 @@ public class VideoSettingsScreenMixin {
     }
 
     @Unique
-    private static OptionInstance<Boolean> concentration$wrapperFullscreen() {
-        return OptionInstance.createBoolean("options.fullscreen", Minecraft.getInstance().options.fullscreen().get(), (value) -> {
-            Concentration.toggleFullScreenMode(Minecraft.getInstance().options, value);
-        });
+    private static OptionInstance<Boolean> concentration$wrapperFullscreen(Options options) {
+        // Don't put a constant to the second parameter, or else whatever fullscreen you are, when you open video settings page, the value shown is always the same
+        return OptionInstance.createBoolean("options.fullscreen", options.fullscreen().get(), (value) -> Concentration.toggleFullScreenMode(options, value));
     }
 
 }
