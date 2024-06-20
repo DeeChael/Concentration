@@ -25,9 +25,13 @@ public class ConcentrationFabricMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return "net.deechael.concentration.fabric.mixin.SodiumVideoOptionsScreenMixin".equals(mixinClassName)
-                && FabricLoader.getInstance().isModLoaded("sodium")
-                || mixinClassName.equals("net.deechael.concentration.fabric.mixin.WindowMixin");
+        if (FabricLoader.getInstance().isModLoaded("vulkanmod")) {
+            return  mixinClassName.equals("net.deechael.concentration.fabric.mixin.VulkanWindowMixin") ||
+                    mixinClassName.equals("net.deechael.concentration.fabric.mixin.OptionsMixin") ||
+                    mixinClassName.equals("net.deechael.concentration.fabric.mixin.GLFWMixin");
+        } else {
+            return checkSodium(mixinClassName) || mixinClassName.equals("net.deechael.concentration.fabric.mixin.WindowMixin");
+        }
     }
 
     @Override
@@ -45,6 +49,11 @@ public class ConcentrationFabricMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+    }
+
+    private static boolean checkSodium(String mixinClassName) {
+        return "net.deechael.concentration.fabric.mixin.SodiumVideoOptionsScreenMixin".equals(mixinClassName)
+                && FabricLoader.getInstance().isModLoaded("sodium");
     }
 
 }

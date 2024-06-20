@@ -1,70 +1,28 @@
 package net.deechael.concentration.fabric.mixin;
 
 import com.mojang.blaze3d.platform.Monitor;
-import com.mojang.blaze3d.platform.ScreenManager;
 import com.mojang.blaze3d.platform.VideoMode;
 import com.mojang.blaze3d.platform.Window;
 import net.deechael.concentration.ConcentrationConstants;
 import net.deechael.concentration.fabric.ConcentrationFabricCaching;
 import net.deechael.concentration.fabric.config.ConcentrationConfig;
+import net.deechael.concentration.mixin.accessor.WindowAccessor;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * Borderless implementation
- * @author DeeChael
- */
-@Mixin(Window.class)
-public abstract class WindowMixin {
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.invokePPV;
 
-    @Shadow
-    private boolean fullscreen;
+@Mixin(value = GLFW.class, remap = false)
+public class GLFWMixin {
 
-    @Shadow
-    @Final
-    private ScreenManager screenManager;
-
-    @Shadow
-    private int x;
-    @Shadow
-    private int y;
-    @Shadow
-    private int width;
-    @Shadow
-    private int height;
-
-    @Inject(method = "onMove", at = @At("HEAD"))
-    private void inject$onMove$head(long window, int x, int y, CallbackInfo ci) {
-        if (!this.fullscreen) {
-            if (!ConcentrationFabricCaching.concentration$cachedPos) {
-                ConcentrationConstants.LOGGER.info("Window position has been cached");
-            }
-            ConcentrationFabricCaching.concentration$cachedPos = true;
-            ConcentrationFabricCaching.concentration$cachedX = x;
-            ConcentrationFabricCaching.concentration$cachedY = y;
-        }
-    }
-
-    @Inject(method = "onResize", at = @At("HEAD"))
-    private void inject$onResize$head(long window, int width, int height, CallbackInfo ci) {
-        if (!this.fullscreen && !ConcentrationFabricCaching.concentration$cacheSizeLock) {
-            if (!ConcentrationFabricCaching.concentration$cachedSize) {
-                ConcentrationConstants.LOGGER.info("Window size has been cached");
-            }
-            ConcentrationFabricCaching.concentration$cachedSize = true;
-            ConcentrationFabricCaching.concentration$cachedWidth = width;
-            ConcentrationFabricCaching.concentration$cachedHeight = height;
-        }
-    }
-
-    @Redirect(method = "setMode", at = @At(value = "INVOKE", remap = false, target = "Lorg/lwjgl/glfw/GLFW;glfwSetWindowMonitor(JJIIIII)V"))
-    private void redirect$glfwSetWindowMonitor(long window, long monitor, int xpos, int ypos, int width, int height, int refreshRate) {
+    @Inject(method = "glfwSetWindowMonitor", at = @At("HEAD"), cancellable = true)
+    private static void inject$glfwSetWindowMonitor(long window, long monitor, int xpos, int ypos, int width, int height, int refreshRate, CallbackInfo ci) {
         ConcentrationConstants.LOGGER.info("================= [Concentration Start] =================");
         ConcentrationConstants.LOGGER.info("Trying to modify window monitor");
 
@@ -83,7 +41,10 @@ public abstract class WindowMixin {
         int finalX;
         int finalY;
 
-        if (this.fullscreen) {
+        Window windowInstance = Minecraft.getInstance().getWindow();
+        WindowAccessor accessor = (WindowAccessor) (Object) windowInstance;
+
+        if (windowInstance != null && windowInstance.isFullscreen()) {
             ConcentrationConfig config = ConcentrationConfig.getInstance();
 
             ConcentrationConstants.LOGGER.info("Trying to switch to borderless fullscreen mode");
@@ -96,12 +57,11 @@ public abstract class WindowMixin {
             // Lock caching, because when switching back, the window will be once resized to the maximum value and the cache value will be wrong
             // Position won't be affected, so it doesn't need lock
             ConcentrationFabricCaching.concentration$cacheSizeLock = true;
-
             ConcentrationConstants.LOGGER.info("Locked size caching");
 
             // Get the monitor the user want to use and get the relative position in the system
             // The monitor is always non-null because when switching fullscreen mode, there must be a monitor to put the window
-            Monitor monitorInstance = this.screenManager.getMonitor(monitor);
+            Monitor monitorInstance = accessor.getScreenManager().getMonitor(monitor);
             ConcentrationConstants.LOGGER.info("Current fullscreen monitor is {}", monitor);
 
             // Remove the title bar to prevent that user can see the title bar if they put their monitors vertically connected
@@ -109,6 +69,7 @@ public abstract class WindowMixin {
             ConcentrationConstants.LOGGER.info("Trying to remove the title bar");
 
             if (ConcentrationConfig.getInstance().customized) {
+
                 ConcentrationConstants.LOGGER.info("Customization enabled, so replace the fullscreen size with customized size");
                 finalX = config.x + (config.related ? monitorInstance.getX() : 0);
                 finalY = config.y - (config.height == height ? 1 : 0) + (config.related ? monitorInstance.getY() : 0);
@@ -125,10 +86,10 @@ public abstract class WindowMixin {
                 finalHeight = height + 1;
             }
 
-            this.x = finalX;
-            this.y = finalY;
-            this.width = finalWidth;
-            this.height = finalHeight;
+            accessor.setX(finalX);
+            accessor.setY(finalY);
+            accessor.setWidth(finalWidth);
+            accessor.setHeight(finalHeight);
         } else {
             ConcentrationConstants.LOGGER.info("Trying to switch to windowed mode");
 
@@ -151,7 +112,7 @@ public abstract class WindowMixin {
             } else if (ConcentrationFabricCaching.concentration$lastMonitor != -1) {
                 // or else maybe the game started with fullscreen mode, so I don't need to care about the size
                 // only need to make sure that the position is in the correct monitor
-                Monitor monitorInstance = this.screenManager.getMonitor(ConcentrationFabricCaching.concentration$lastMonitor);
+                Monitor monitorInstance = accessor.getScreenManager().getMonitor(ConcentrationFabricCaching.concentration$lastMonitor);
                 VideoMode videoMode = monitorInstance.getCurrentMode();
                 finalX = (videoMode.getWidth() - finalWidth) / 2;
                 finalY = (videoMode.getHeight() - finalHeight) / 2;
@@ -169,14 +130,18 @@ public abstract class WindowMixin {
         ConcentrationConstants.LOGGER.info("Window size: {}, {}, position: {}, {}", finalWidth, finalHeight, finalX, finalY);
 
         ConcentrationConstants.LOGGER.info("Trying to resize and reposition the window");
-        GLFW.glfwSetWindowMonitor(window, 0L, finalX, finalY, finalWidth, finalHeight, -1);
+        finalExecute(window, 0L, finalX, finalY, finalWidth, finalHeight, -1);
 
         ConcentrationConstants.LOGGER.info("================= [Concentration End] =================");
+        ci.cancel();
     }
 
-    @Redirect(method = "setMode", at = @At(value = "INVOKE", remap = false, target = "Lorg/lwjgl/glfw/GLFW;glfwGetWindowMonitor(J)J"))
-    private long redirect$glfwGetWindowMonitor(long window) {
-        return 1L;
+    private static void finalExecute(long window, long monitor, int xpos, int ypos, int width, int height, int refreshRate) {
+        long __functionAddress = GLFW.Functions.SetWindowMonitor;
+        if (CHECKS) {
+            check(window);
+        }
+        invokePPV(window, monitor, xpos, ypos, width, height, refreshRate, __functionAddress);
     }
 
 }

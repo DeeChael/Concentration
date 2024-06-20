@@ -17,6 +17,7 @@ dependencies {
 
     modImplementation "maven.modrinth:modmenu:11.0.0"
     modImplementation "maven.modrinth:sodium:mc1.21-0.5.9"
+    modImplementation "maven.modrinth:vulkanmod:0.4.3-fabric,1.21"
 }
 
 loom {

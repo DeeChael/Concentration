@@ -8,7 +8,10 @@
   "plugin": "net.deechael.concentration.fabric.ConcentrationFabricMixinPlugin",
   "client": [
     "SodiumVideoOptionsScreenMixin",
-    "WindowMixin"
+    "WindowMixin",
+    "VulkanWindowMixin",
+    "OptionsMixin",
+    "GLFWMixin"
   ],
   "server": [],
   "injectors": {
