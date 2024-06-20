@@ -1,5 +1,6 @@
 package net.deechael.concentration.fabric;
 
+import net.deechael.concentration.ConcentrationConstants;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -25,8 +26,14 @@ public class ConcentrationFabricMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return "net.deechael.concentration.fabric.mixin.SodiumVideoOptionsScreenMixin".equals(mixinClassName)
-                && FabricLoader.getInstance().isModLoaded("sodium");
+        boolean vulkan = FabricLoader.getInstance().isModLoaded("vulkanmod");
+        if (vulkan) {
+            return checkVulkan(mixinClassName) || checkWindowMixin(mixinClassName)
+                    || "net.deechael.concentration.mixin.accessor.WindowAccessor".equals(mixinClassName)
+                    || "net.deechael.concentration.mixin.KeyboardHandlerMixin".equals(mixinClassName);
+        } else {
+            return !mixinClassName.contains("fabric") || checkSodium(mixinClassName);
+        }
     }
 
     @Override
@@ -44,6 +51,19 @@ public class ConcentrationFabricMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+    }
+
+    private boolean checkSodium(String mixinClassName) {
+        return "net.deechael.concentration.mixin.fabric.SodiumVideoOptionsScreenMixin".equals(mixinClassName)
+                && FabricLoader.getInstance().isModLoaded("sodium");
+    }
+
+    private boolean checkVulkan(String mixinClassName) {
+        return "net.deechael.concentration.mixin.fabric.OptionsMixin".equals(mixinClassName);
+    }
+
+    private boolean checkWindowMixin(String mixinClassName) {
+        return mixinClassName.startsWith("net.deechael.concentration.mixin.fabric.WindowMixin");
     }
 
 }

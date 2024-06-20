@@ -12,8 +12,4 @@ public class ConcentrationFabric implements ClientModInitializer {
     public void onInitializeClient() {
     }
 
-    private void test(boolean a) {
-
-    }
-
 }

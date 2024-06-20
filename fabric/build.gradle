@@ -16,6 +16,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     modImplementation "maven.modrinth:sodium:mc1.21-0.5.9"
+    modImplementation "maven.modrinth:vulkanmod:0.4.3-fabric,1.21"
 }
 
 loom {

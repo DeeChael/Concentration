@@ -1,4 +1,4 @@
-package net.deechael.concentration.fabric.mixin;
+package net.deechael.concentration.mixin.fabric;
 
 import me.jellysquid.mods.sodium.client.gui.SodiumGameOptionPages;
 import net.deechael.concentration.Concentration;

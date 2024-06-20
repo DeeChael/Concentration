@@ -12,14 +12,13 @@
   },
   "license": "${license}",
   "icon": "logo.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "net.deechael.concentration.fabric.ConcentrationFabric"
     ]
   },
   "mixins": [
-    "${mod_id}.mixins.json",
     "${mod_id}.fabric.mixins.json"
   ],
   "depends": {

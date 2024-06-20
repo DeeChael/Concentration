@@ -5,6 +5,10 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "client": [
+    "KeyboardHandlerMixin",
+    "VideoSettingsScreenMixin",
+    "WindowMixin",
+    "accessor.WindowAccessor"
   ],
   "server": [],
   "injectors": {
