@@ -9,22 +9,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class ConcentrationConfigHandler {
+public class ConcentrationConfig {
 	private static final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("concentration.json");
 
-	private ConcentrationConfigHandler() {}
+	private ConcentrationConfig() {}
 
-	private static ConcentrationConfigHandler INSTANCE = null;
+	private static ConcentrationConfig INSTANCE = null;
 
-	public static ConcentrationConfigHandler getInstance() {
+	public static ConcentrationConfig getInstance() {
 		if (INSTANCE == null) {
 			Gson gson = new Gson();
 			try (FileReader reader = new FileReader(configFile.toFile())) {
-				INSTANCE = gson.fromJson(reader, ConcentrationConfigHandler.class);
+				INSTANCE = gson.fromJson(reader, ConcentrationConfig.class);
 			} catch (IOException ignored) {
 			}
 			if (INSTANCE == null) {
-				INSTANCE = new ConcentrationConfigHandler();
+				INSTANCE = new ConcentrationConfig();
 				INSTANCE.save();
 			}
 		}
@@ -42,7 +42,7 @@ public class ConcentrationConfigHandler {
 	public void save() {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		try (FileWriter writer = new FileWriter(configFile.toFile())) {
-			gson.toJson(this, ConcentrationConfigHandler.class, writer);
+			gson.toJson(this, ConcentrationConfig.class, writer);
 		} catch (IOException ignored) {
 		}
 	}

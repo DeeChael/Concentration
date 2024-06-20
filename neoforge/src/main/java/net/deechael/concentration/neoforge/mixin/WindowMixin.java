@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.ScreenManager;
 import com.mojang.blaze3d.platform.VideoMode;
 import com.mojang.blaze3d.platform.Window;
 import net.deechael.concentration.ConcentrationConstants;
+import net.deechael.concentration.neoforge.config.ConcentrationConfig;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +30,15 @@ public abstract class WindowMixin {
     @Final
     private ScreenManager screenManager;
 
-    @Shadow private int width;
+    @Shadow
+    private int x;
+    @Shadow
+    private int y;
+    @Shadow
+    private int width;
+    @Shadow
+    private int height;
+
     @Unique
     private long concentration$lastMonitor = -1;
 
@@ -94,6 +103,8 @@ public abstract class WindowMixin {
         int finalY;
 
         if (this.fullscreen) {
+            ConcentrationConfig.ensureLoaded();
+
             ConcentrationConstants.LOGGER.info("Trying to switch to borderless fullscreen mode");
 
             // If the game started with fullscreen mode, when switching to windowed mode, it will be forced to move to the primary monitor
@@ -116,15 +127,34 @@ public abstract class WindowMixin {
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
             ConcentrationConstants.LOGGER.info("Trying to remove the title bar");
 
-            // If we make the window not decorated and set the window size exactly the same with the screen size, it will become native fullscreen mode
-            // to prevent this, I enlarge the height by 1 pixel and move up the window by 1 pixel which won't affect anything (unless you have a screen
-            // which is added above the monitor which holds the game) and will have a good experience
-            // Actually this is a little bit dirty, needs to find a better way to solve it
-            finalWidth = width;
-            finalHeight = height + 1;
+            if (ConcentrationConfig.CUSTOMIZED.get()) {
+                final boolean related = ConcentrationConfig.RELATED.get();
+                final int configX = ConcentrationConfig.X.get();
+                final int configY = ConcentrationConfig.Y.get();
+                final int configWidth = ConcentrationConfig.WIDTH.get();
+                final int configHeight = ConcentrationConfig.HEIGHT.get();
 
-            finalX = monitorInstance.getX();
-            finalY = monitorInstance.getY() - 1;
+                ConcentrationConstants.LOGGER.info("Customization enabled, so replace the fullscreen size with customized size");
+
+                finalX = configX + (related ? monitorInstance.getX() : 0);
+                finalY = configY - (configHeight == height ? 1 : 0) + (related ? monitorInstance.getY() : 0);
+                finalWidth = configWidth;
+                finalHeight = configHeight + (configHeight == height ? 1 : 0);
+            } else {
+                // If we make the window not decorated and set the window size exactly the same with the screen size, it will become native fullscreen mode
+                // to prevent this, I enlarge the height by 1 pixel and move up the window by 1 pixel which won't affect anything (unless you have a screen
+                // which is added above the monitor which holds the game) and will have a good experience
+                // Actually this is a little bit dirty, needs to find a better way to solve it
+                finalX = monitorInstance.getX();
+                finalY = monitorInstance.getY() - 1;
+                finalWidth = width;
+                finalHeight = height + 1;
+            }
+
+            this.x = finalX;
+            this.y = finalY;
+            this.width = finalWidth;
+            this.height = finalHeight;
         } else {
             ConcentrationConstants.LOGGER.info("Trying to switch to windowed mode");
 

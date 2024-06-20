@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.ScreenManager;
 import com.mojang.blaze3d.platform.VideoMode;
 import com.mojang.blaze3d.platform.Window;
 import net.deechael.concentration.ConcentrationConstants;
-import net.deechael.concentration.fabric.config.ConcentrationConfigHandler;
+import net.deechael.concentration.fabric.config.ConcentrationConfig;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,10 +30,15 @@ public abstract class WindowMixin {
     @Final
     private ScreenManager screenManager;
 
-    @Shadow private int width;
-    @Shadow private int x;
-    @Shadow private int y;
-    @Shadow private int height;
+    @Shadow
+    private int x;
+    @Shadow
+    private int y;
+    @Shadow
+    private int width;
+    @Shadow
+    private int height;
+
     @Unique
     private long concentration$lastMonitor = -1;
 
@@ -98,7 +103,7 @@ public abstract class WindowMixin {
         int finalY;
 
         if (this.fullscreen) {
-            ConcentrationConfigHandler config = ConcentrationConfigHandler.getInstance();
+            ConcentrationConfig config = ConcentrationConfig.getInstance();
 
             ConcentrationConstants.LOGGER.info("Trying to switch to borderless fullscreen mode");
 
@@ -122,7 +127,7 @@ public abstract class WindowMixin {
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
             ConcentrationConstants.LOGGER.info("Trying to remove the title bar");
 
-            if (ConcentrationConfigHandler.getInstance().customized) {
+            if (ConcentrationConfig.getInstance().customized) {
                 ConcentrationConstants.LOGGER.info("Customization enabled, so replace the fullscreen size with customized size");
                 finalX = config.x + (config.related ? monitorInstance.getX() : 0);
                 finalY = config.y - (config.height == height ? 1 : 0) + (config.related ? monitorInstance.getY() : 0);
