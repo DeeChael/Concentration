@@ -38,10 +38,22 @@ public abstract class ConcentrationConfigScreen extends Screen {
         entries = new ConfigListWidget(this.minecraft, width, height - 64, 32, 25);
         addElements();
         addRenderableWidget(entries);
-        addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> {save(); this.minecraft.setScreen(parent);})
-                .pos(this.width / 2 - 100, this.height - 27)
-                .size(200, 20)
-                .build()
+        addRenderableWidget(
+                Button.builder(Component.translatable("concentration.option.apply"), (button) -> {
+                    save();
+                })
+                        .pos(this.width / 2 - 175, this.height - 27)
+                        .size(150, 20)
+                        .build()
+        );
+        addRenderableWidget(
+                Button.builder(CommonComponents.GUI_DONE, (button) -> {
+                    save();
+                    this.minecraft.setScreen(parent);
+                })
+                        .pos(this.width / 2 + 25, this.height - 27)
+                        .size(150, 20)
+                        .build()
         );
     }
 
@@ -66,10 +78,7 @@ public abstract class ConcentrationConfigScreen extends Screen {
 
         public Style getHoveredStyle(int mouseX, int mouseY) {
             Optional<GuiEventListener> hovered = getChildAt(mouseX, mouseY);
-            if (hovered.isPresent()) {
-                return ((ConfigListEntry)hovered.get()).getHoveredStyle(mouseX, mouseY);
-            }
-            return null;
+            return hovered.map(guiEventListener -> ((ConfigListEntry) guiEventListener).getHoveredStyle(mouseX, mouseY)).orElse(null);
         }
     }
 
@@ -112,19 +121,19 @@ public abstract class ConcentrationConfigScreen extends Screen {
     public abstract void save();
 
     @Override
-    public void render(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
-        super.render(drawContext, mouseX, mouseY, delta);
+    public void render(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
         Style hoveredStyle = entries.getHoveredStyle(mouseX, mouseY);
         if (hoveredStyle != null) {
-            drawContext.renderComponentHoverEffect(this.font, hoveredStyle, mouseX, mouseY);
+            context.renderComponentHoverEffect(this.font, hoveredStyle, mouseX, mouseY);
         }
-        drawContext.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
+        context.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
     }
 
     @Override
-    public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        this.renderTransparentBackground(context);
-        // renderMenuBackgroundTexture(context, ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/dirt"), 0, 0,  16, 16, 16, 16);
+    public void renderBackground(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+        // this.renderTransparentBackground(context);
+        super.renderBackground(context, mouseX, mouseY, delta);
     }
 
     public abstract void addElements();
@@ -156,8 +165,8 @@ public abstract class ConcentrationConfigScreen extends Screen {
         }
 
         @Override
-        public void render(GuiGraphics drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            drawContext.drawCenteredString(textRenderer, headerText, width / 2, y + 5, 16777215);
+        public void render(@NotNull GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            context.drawCenteredString(textRenderer, headerText, width / 2, y + 5, 16777215);
         }
 
         private Style getStyleAt(int mouseX) {
@@ -248,7 +257,7 @@ public abstract class ConcentrationConfigScreen extends Screen {
         }
 
         @Override
-        public void render(GuiGraphics drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(@NotNull GuiGraphics drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             drawContext.drawString(textRenderer, textField.getMessage(), this.x, y + 5, 16777215);
             super.render(drawContext, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
         }
@@ -283,4 +292,5 @@ public abstract class ConcentrationConfigScreen extends Screen {
             }
         });
     }
+
 }

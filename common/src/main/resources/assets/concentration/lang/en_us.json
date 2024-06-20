@@ -4,5 +4,6 @@
   "concentration.config.customization.x": "X Coordinate",
   "concentration.config.customization.y": "Y Coordinate",
   "concentration.config.customization.width": "Width",
-  "concentration.config.customization.height": "Height"
+  "concentration.config.customization.height": "Height",
+  "concentration.option.apply": "Apply"
 }
