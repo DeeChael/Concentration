@@ -42,24 +42,24 @@ public abstract class WindowMixin {
     @Inject(method = "onMove", at = @At("HEAD"))
     private void inject$onMove$head(long window, int x, int y, CallbackInfo ci) {
         if (!this.fullscreen) {
-            if (!ConcentrationFabricCaching.concentration$cachedPos) {
+            if (!ConcentrationFabricCaching.cachedPos) {
                 ConcentrationConstants.LOGGER.info("Window position has been cached");
             }
-            ConcentrationFabricCaching.concentration$cachedPos = true;
-            ConcentrationFabricCaching.concentration$cachedX = x;
-            ConcentrationFabricCaching.concentration$cachedY = y;
+            ConcentrationFabricCaching.cachedPos = true;
+            ConcentrationFabricCaching.cachedX = x;
+            ConcentrationFabricCaching.cachedY = y;
         }
     }
 
     @Inject(method = "onResize", at = @At("HEAD"))
     private void inject$onResize$head(long window, int width, int height, CallbackInfo ci) {
-        if (!this.fullscreen && !ConcentrationFabricCaching.concentration$cacheSizeLock) {
-            if (!ConcentrationFabricCaching.concentration$cachedSize) {
+        if (!this.fullscreen && !ConcentrationFabricCaching.cacheSizeLock) {
+            if (!ConcentrationFabricCaching.cachedSize) {
                 ConcentrationConstants.LOGGER.info("Window size has been cached");
             }
-            ConcentrationFabricCaching.concentration$cachedSize = true;
-            ConcentrationFabricCaching.concentration$cachedWidth = width;
-            ConcentrationFabricCaching.concentration$cachedHeight = height;
+            ConcentrationFabricCaching.cachedSize = true;
+            ConcentrationFabricCaching.cachedWidth = width;
+            ConcentrationFabricCaching.cachedHeight = height;
         }
     }
 
@@ -91,11 +91,11 @@ public abstract class WindowMixin {
             // If the game started with fullscreen mode, when switching to windowed mode, it will be forced to move to the primary monitor
             // Though size and position isn't be set at initialization, but I think the window should be at the initial monitor
             // So save the monitor and use the monitor value when the size isn't cached
-            ConcentrationFabricCaching.concentration$lastMonitor = monitor;
+            ConcentrationFabricCaching.lastMonitor = monitor;
 
             // Lock caching, because when switching back, the window will be once resized to the maximum value and the cache value will be wrong
             // Position won't be affected, so it doesn't need lock
-            ConcentrationFabricCaching.concentration$cacheSizeLock = true;
+            ConcentrationFabricCaching.cacheSizeLock = true;
 
             ConcentrationConstants.LOGGER.info("Locked size caching");
 
@@ -139,19 +139,19 @@ public abstract class WindowMixin {
             ConcentrationConstants.LOGGER.info("Trying to use cached value to resize the window");
 
             // Make sure that Concentration has cached position and size, because position size won't be cached when the game starting in fullscreen mode
-            finalWidth = ConcentrationFabricCaching.concentration$cachedSize ? ConcentrationFabricCaching.concentration$cachedWidth : width;
-            finalHeight = ConcentrationFabricCaching.concentration$cachedSize ? ConcentrationFabricCaching.concentration$cachedHeight : height;
+            finalWidth = ConcentrationFabricCaching.cachedSize ? ConcentrationFabricCaching.cachedWidth : width;
+            finalHeight = ConcentrationFabricCaching.cachedSize ? ConcentrationFabricCaching.cachedHeight : height;
 
             // To make sure that even starting with fullscreen mode can also make the window stay at the current monitor
             // So I set two ways to ensure the position
-            if (ConcentrationFabricCaching.concentration$cachedPos) {
+            if (ConcentrationFabricCaching.cachedPos) {
                 // If Concentration cached the pos, use the cached value
-                finalX = ConcentrationFabricCaching.concentration$cachedX;
-                finalY = ConcentrationFabricCaching.concentration$cachedY;
-            } else if (ConcentrationFabricCaching.concentration$lastMonitor != -1) {
+                finalX = ConcentrationFabricCaching.cachedX;
+                finalY = ConcentrationFabricCaching.cachedY;
+            } else if (ConcentrationFabricCaching.lastMonitor != -1) {
                 // or else maybe the game started with fullscreen mode, so I don't need to care about the size
                 // only need to make sure that the position is in the correct monitor
-                Monitor monitorInstance = this.screenManager.getMonitor(ConcentrationFabricCaching.concentration$lastMonitor);
+                Monitor monitorInstance = this.screenManager.getMonitor(ConcentrationFabricCaching.lastMonitor);
                 VideoMode videoMode = monitorInstance.getCurrentMode();
                 finalX = (videoMode.getWidth() - finalWidth) / 2;
                 finalY = (videoMode.getHeight() - finalHeight) / 2;
@@ -162,7 +162,7 @@ public abstract class WindowMixin {
             }
 
             // Unlock caching, because user can change the window size now
-            ConcentrationFabricCaching.concentration$cacheSizeLock = false;
+            ConcentrationFabricCaching.cacheSizeLock = false;
             ConcentrationConstants.LOGGER.info("Unlocked size caching");
         }
 
