@@ -26,7 +26,8 @@ public class ConcentrationFabricMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         return "net.deechael.concentration.fabric.mixin.SodiumVideoOptionsScreenMixin".equals(mixinClassName)
-                && FabricLoader.getInstance().isModLoaded("sodium");
+                && FabricLoader.getInstance().isModLoaded("sodium")
+                || mixinClassName.equals("net.deechael.concentration.fabric.mixin.WindowMixin");
     }
 
     @Override

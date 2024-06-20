@@ -16,6 +16,9 @@
   "entrypoints": {
     "client": [
       "net.deechael.concentration.fabric.ConcentrationFabric"
+    ],
+    "modmenu" : [
+      "net.deechael.concentration.fabric.compat.ModMenuCompat"
     ]
   },
   "mixins": [

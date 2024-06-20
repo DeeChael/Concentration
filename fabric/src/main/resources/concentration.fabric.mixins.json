@@ -7,7 +7,8 @@
   "mixins": [],
   "plugin": "net.deechael.concentration.fabric.ConcentrationFabricMixinPlugin",
   "client": [
-    "SodiumVideoOptionsScreenMixin"
+    "SodiumVideoOptionsScreenMixin",
+    "WindowMixin"
   ],
   "server": [],
   "injectors": {
