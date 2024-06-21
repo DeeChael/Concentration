@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Borderless implementation
+ *
  * @author DeeChael
  */
 @Mixin(value = Window.class, priority = 2000)

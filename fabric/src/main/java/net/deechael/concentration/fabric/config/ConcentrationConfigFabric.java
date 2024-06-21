@@ -13,52 +13,53 @@ import java.nio.file.Path;
 
 public class ConcentrationConfigFabric implements Config {
 
-	private static final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("concentration.json");
+    private static final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("concentration.json");
 
-	private ConcentrationConfigFabric() {}
+    private ConcentrationConfigFabric() {
+    }
 
-	private static ConcentrationConfigFabric INSTANCE = null;
+    private static ConcentrationConfigFabric INSTANCE = null;
 
-	public static ConcentrationConfigFabric getInstance() {
-		if (INSTANCE == null) {
-			Gson gson = new Gson();
-			try (FileReader reader = new FileReader(configFile.toFile())) {
-				INSTANCE = gson.fromJson(reader, ConcentrationConfigFabric.class);
-			} catch (IOException ignored) {
-			}
-			if (INSTANCE == null) {
-				INSTANCE = new ConcentrationConfigFabric();
-				INSTANCE.save();
-			}
-		}
-		return INSTANCE;
-	}
+    public static ConcentrationConfigFabric getInstance() {
+        if (INSTANCE == null) {
+            Gson gson = new Gson();
+            try (FileReader reader = new FileReader(configFile.toFile())) {
+                INSTANCE = gson.fromJson(reader, ConcentrationConfigFabric.class);
+            } catch (IOException ignored) {
+            }
+            if (INSTANCE == null) {
+                INSTANCE = new ConcentrationConfigFabric();
+                INSTANCE.save();
+            }
+        }
+        return INSTANCE;
+    }
 
-	public boolean customized = false;
-	public boolean related = false;
-	public int x = 0;
-	public int y = 0;
-	public int width = 800;
-	public int height = 600;
-	public FullscreenMode fullscreen;
+    public boolean customized = false;
+    public boolean related = false;
+    public int x = 0;
+    public int y = 0;
+    public int width = 800;
+    public int height = 600;
+    public FullscreenMode fullscreen;
 
-	@Override
-	public FullscreenMode getFullscreenMode() {
-		return this.fullscreen;
-	}
+    @Override
+    public FullscreenMode getFullscreenMode() {
+        return this.fullscreen;
+    }
 
-	@Override
-	public void setFullscreenMode(FullscreenMode fullscreenMode) {
-		this.fullscreen = fullscreenMode;
-	}
+    @Override
+    public void setFullscreenMode(FullscreenMode fullscreenMode) {
+        this.fullscreen = fullscreenMode;
+    }
 
-	@Override
-	public void save() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		try (FileWriter writer = new FileWriter(configFile.toFile())) {
-			gson.toJson(this, ConcentrationConfigFabric.class, writer);
-		} catch (IOException ignored) {
-		}
-	}
+    @Override
+    public void save() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter(configFile.toFile())) {
+            gson.toJson(this, ConcentrationConfigFabric.class, writer);
+        } catch (IOException ignored) {
+        }
+    }
 
 }

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class stores all the constants of Concentration
+ *
  * @author DeeChael
  */
 public final class ConcentrationConstants {

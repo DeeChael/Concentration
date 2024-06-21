@@ -7,6 +7,7 @@ import net.minecraft.client.Options;
 
 /**
  * Main class of Concentration
+ *
  * @author DeeChael
  */
 public class Concentration {
@@ -20,8 +21,9 @@ public class Concentration {
 
     /**
      * Toggle fullscreen mode
+     *
      * @param options should be Minecraft vanilla options
-     * @param value whether fullscreen is turned on
+     * @param value   whether fullscreen is turned on
      */
     public static void toggleFullScreenMode(Options options, boolean value) {
         options.fullscreen().set(value);

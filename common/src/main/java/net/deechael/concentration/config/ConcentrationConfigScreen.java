@@ -5,6 +5,7 @@ import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -12,7 +13,6 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -40,17 +40,17 @@ public abstract class ConcentrationConfigScreen extends Screen {
         addRenderableWidget(entries);
         addRenderableWidget(
                 Button.builder(Component.translatable("concentration.option.apply"), (button) -> {
-                    save();
-                })
+                            save();
+                        })
                         .pos(this.width / 2 - 175, this.height - 27)
                         .size(150, 20)
                         .build()
         );
         addRenderableWidget(
                 Button.builder(CommonComponents.GUI_DONE, (button) -> {
-                    save();
-                    this.minecraft.setScreen(parent);
-                })
+                            save();
+                            this.minecraft.setScreen(parent);
+                        })
                         .pos(this.width / 2 + 25, this.height - 27)
                         .size(150, 20)
                         .build()

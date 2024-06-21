@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * Hooks sodium options to make sure that changing fullscreen behaviour will use Concentration function instead of vanilla function
+ *
  * @author DeeChael
  */
 @Mixin(SodiumGameOptionPages.class)

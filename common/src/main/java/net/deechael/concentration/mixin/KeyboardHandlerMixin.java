@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Make fullscreen shortcut follow Concentration function
+ *
  * @author DeeChael
  */
 @Mixin(KeyboardHandler.class)

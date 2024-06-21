@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Mod entrance for NeoForge of Concentration
+ *
  * @author DeeChael
  */
 @Mod(value = ConcentrationConstants.MOD_ID, dist = Dist.CLIENT)

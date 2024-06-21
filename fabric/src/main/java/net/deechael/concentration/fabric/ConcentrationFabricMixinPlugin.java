@@ -10,6 +10,7 @@ import java.util.Set;
 
 /**
  * Mixin plugin to make sure that sodium support only turned on when sodium installed
+ *
  * @author DeeChael
  */
 public class ConcentrationFabricMixinPlugin implements IMixinConfigPlugin {
@@ -26,7 +27,7 @@ public class ConcentrationFabricMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (FabricLoader.getInstance().isModLoaded("vulkanmod")) {
-            return  mixinClassName.equals("net.deechael.concentration.fabric.mixin.VulkanWindowMixin") ||
+            return mixinClassName.equals("net.deechael.concentration.fabric.mixin.VulkanWindowMixin") ||
                     mixinClassName.equals("net.deechael.concentration.fabric.mixin.OptionsMixin") ||
                     mixinClassName.equals("net.deechael.concentration.fabric.mixin.GLFWMixin");
         } else {

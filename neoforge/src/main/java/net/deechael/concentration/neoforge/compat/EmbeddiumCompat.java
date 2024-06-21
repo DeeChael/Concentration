@@ -15,6 +15,7 @@ import org.embeddedt.embeddium.api.options.structure.StandardOptions;
 
 /**
  * Make Embedddium fullscreen option follow Concentration function
+ *
  * @author DeeChael
  */
 public class EmbeddiumCompat {

@@ -44,7 +44,7 @@ public final class ConcentrationConfigNeoForge implements Config {
         HEIGHT = builder.comment("Height")
                 .defineInRange("height", 600, 1, Integer.MAX_VALUE);
         FULLSCREEN = builder.comment("Fullscreen mode")
-                        .defineEnum("fullscreen", FullscreenMode.BORDERLESS);
+                .defineEnum("fullscreen", FullscreenMode.BORDERLESS);
 
         builder.pop();
 
