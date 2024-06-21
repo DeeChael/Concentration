@@ -5,7 +5,8 @@ import com.mojang.blaze3d.platform.ScreenManager;
 import com.mojang.blaze3d.platform.VideoMode;
 import com.mojang.blaze3d.platform.Window;
 import net.deechael.concentration.ConcentrationConstants;
-import net.deechael.concentration.neoforge.config.ConcentrationConfig;
+import net.deechael.concentration.FullscreenMode;
+import net.deechael.concentration.neoforge.config.ConcentrationConfigNeoForge;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -103,9 +104,7 @@ public abstract class WindowMixin {
         int finalY;
 
         if (this.fullscreen) {
-            ConcentrationConfig.ensureLoaded();
-
-            ConcentrationConstants.LOGGER.info("Trying to switch to borderless fullscreen mode");
+            ConcentrationConfigNeoForge.ensureLoaded();
 
             // If the game started with fullscreen mode, when switching to windowed mode, it will be forced to move to the primary monitor
             // Though size and position isn't be set at initialization, but I think the window should be at the initial monitor
@@ -115,8 +114,16 @@ public abstract class WindowMixin {
             // Lock caching, because when switching back, the window will be once resized to the maximum value and the cache value will be wrong
             // Position won't be affected, so it doesn't need lock
             this.concentration$cacheSizeLock = true;
-
             ConcentrationConstants.LOGGER.info("Locked size caching");
+
+            if (ConcentrationConfigNeoForge.FULLSCREEN.get() == FullscreenMode.NATIVE) {
+                ConcentrationConstants.LOGGER.info("Fullscreen mode is native, apply now!");
+                GLFW.glfwSetWindowMonitor(window, monitor, xpos, ypos, width, height, -1);
+                ConcentrationConstants.LOGGER.info("================= [Concentration End] =================");
+                return;
+            }
+
+            ConcentrationConstants.LOGGER.info("Trying to switch to borderless fullscreen mode");
 
             // Get the monitor the user want to use and get the relative position in the system
             // The monitor is always non-null because when switching fullscreen mode, there must be a monitor to put the window
@@ -127,12 +134,12 @@ public abstract class WindowMixin {
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
             ConcentrationConstants.LOGGER.info("Trying to remove the title bar");
 
-            if (ConcentrationConfig.CUSTOMIZED.get()) {
-                final boolean related = ConcentrationConfig.RELATED.get();
-                final int configX = ConcentrationConfig.X.get();
-                final int configY = ConcentrationConfig.Y.get();
-                final int configWidth = ConcentrationConfig.WIDTH.get();
-                final int configHeight = ConcentrationConfig.HEIGHT.get();
+            if (ConcentrationConfigNeoForge.CUSTOMIZED.get()) {
+                final boolean related = ConcentrationConfigNeoForge.RELATED.get();
+                final int configX = ConcentrationConfigNeoForge.X.get();
+                final int configY = ConcentrationConfigNeoForge.Y.get();
+                final int configWidth = ConcentrationConfigNeoForge.WIDTH.get();
+                final int configHeight = ConcentrationConfigNeoForge.HEIGHT.get();
 
                 ConcentrationConstants.LOGGER.info("Customization enabled, so replace the fullscreen size with customized size");
 

@@ -4,7 +4,7 @@ import net.deechael.concentration.Concentration;
 import net.deechael.concentration.ConcentrationConstants;
 import net.deechael.concentration.config.ConcentrationConfigScreen;
 import net.deechael.concentration.neoforge.compat.EmbeddiumCompat;
-import net.deechael.concentration.neoforge.config.ConcentrationConfig;
+import net.deechael.concentration.neoforge.config.ConcentrationConfigNeoForge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.screens.Screen;
@@ -40,31 +40,31 @@ public class ConcentrationNeoForge {
 
                         @Override
                         public void save() {
-                            ConcentrationConfig.SPECS.save();
+                            ConcentrationConfigNeoForge.SPECS.save();
                             Concentration.toggleFullScreenMode(minecraft.options, minecraft.options.fullscreen().get());
                         }
 
                         @Override
                         public void addElements() {
                             addOption(OptionInstance.createBoolean("concentration.config.customization.enabled",
-                                    ConcentrationConfig.CUSTOMIZED.get(),
-                                    ConcentrationConfig.CUSTOMIZED::set));
+                                    ConcentrationConfigNeoForge.CUSTOMIZED.get(),
+                                    ConcentrationConfigNeoForge.CUSTOMIZED::set));
                             addOption(OptionInstance.createBoolean("concentration.config.customization.related",
-                                    ConcentrationConfig.RELATED.get(),
-                                    ConcentrationConfig.RELATED::set));
+                                    ConcentrationConfigNeoForge.RELATED.get(),
+                                    ConcentrationConfigNeoForge.RELATED::set));
 
                             addIntField(Component.translatable("concentration.config.customization.x"),
-                                    ConcentrationConfig.X,
-                                    ConcentrationConfig.X::set);
+                                    ConcentrationConfigNeoForge.X,
+                                    ConcentrationConfigNeoForge.X::set);
                             addIntField(Component.translatable("concentration.config.customization.y"),
-                                    ConcentrationConfig.Y,
-                                    ConcentrationConfig.Y::set);
+                                    ConcentrationConfigNeoForge.Y,
+                                    ConcentrationConfigNeoForge.Y::set);
                             addIntField(Component.translatable("concentration.config.customization.width"),
-                                    ConcentrationConfig.WIDTH,
-                                    ConcentrationConfig.WIDTH::set);
+                                    ConcentrationConfigNeoForge.WIDTH,
+                                    ConcentrationConfigNeoForge.WIDTH::set);
                             addIntField(Component.translatable("concentration.config.customization.height"),
-                                    ConcentrationConfig.HEIGHT,
-                                    ConcentrationConfig.HEIGHT::set);
+                                    ConcentrationConfigNeoForge.HEIGHT,
+                                    ConcentrationConfigNeoForge.HEIGHT::set);
                         }
                     };
                 }

@@ -3,14 +3,16 @@ package net.deechael.concentration.neoforge.config;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.deechael.concentration.ConcentrationConstants;
+import net.deechael.concentration.FullscreenMode;
+import net.deechael.concentration.config.Config;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.nio.file.Path;
 
-public final class ConcentrationConfig {
+public final class ConcentrationConfigNeoForge implements Config {
 
-    public final static ConcentrationConfig INSTANCE = new ConcentrationConfig();
+    public final static ConcentrationConfigNeoForge INSTANCE = new ConcentrationConfigNeoForge();
 
     public static final ModConfigSpec SPECS;
     public static final ModConfigSpec.BooleanValue CUSTOMIZED;
@@ -19,6 +21,7 @@ public final class ConcentrationConfig {
     public static final ModConfigSpec.IntValue Y;
     public static final ModConfigSpec.IntValue WIDTH;
     public static final ModConfigSpec.IntValue HEIGHT;
+    public static final ModConfigSpec.EnumValue<FullscreenMode> FULLSCREEN;
 
     private static boolean loaded = false;
 
@@ -40,13 +43,15 @@ public final class ConcentrationConfig {
                 .defineInRange("width", 800, 1, Integer.MAX_VALUE);
         HEIGHT = builder.comment("Height")
                 .defineInRange("height", 600, 1, Integer.MAX_VALUE);
+        FULLSCREEN = builder.comment("Fullscreen mode")
+                        .defineEnum("fullscreen", FullscreenMode.BORDERLESS);
 
         builder.pop();
 
         SPECS = builder.build();
     }
 
-    public static ConcentrationConfig ensureLoaded() {
+    public static ConcentrationConfigNeoForge ensureLoaded() {
         if (!loaded) {
             ConcentrationConstants.LOGGER.info("Loading Concentration Config");
 
@@ -64,7 +69,22 @@ public final class ConcentrationConfig {
         return INSTANCE;
     }
 
-    private ConcentrationConfig() {
+    private ConcentrationConfigNeoForge() {
+    }
+
+    @Override
+    public FullscreenMode getFullscreenMode() {
+        return FULLSCREEN.get();
+    }
+
+    @Override
+    public void setFullscreenMode(FullscreenMode fullscreenMode) {
+        FULLSCREEN.set(fullscreenMode);
+    }
+
+    @Override
+    public void save() {
+        SPECS.save();
     }
 
 }

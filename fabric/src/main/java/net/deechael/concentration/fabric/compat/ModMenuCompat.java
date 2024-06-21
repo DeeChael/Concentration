@@ -4,7 +4,7 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.deechael.concentration.Concentration;
 import net.deechael.concentration.ConcentrationConstants;
-import net.deechael.concentration.fabric.config.ConcentrationConfig;
+import net.deechael.concentration.fabric.config.ConcentrationConfigFabric;
 import net.deechael.concentration.config.ConcentrationConfigScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
@@ -15,7 +15,7 @@ public class ModMenuCompat implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> {
-            ConcentrationConfig configHandler = ConcentrationConfig.getInstance();
+            ConcentrationConfigFabric configHandler = ConcentrationConfigFabric.getInstance();
 
             return new ConcentrationConfigScreen(Component.literal(ConcentrationConstants.MOD_NAME), parent) {
                 @Override

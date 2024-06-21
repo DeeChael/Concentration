@@ -4,8 +4,9 @@ import com.mojang.blaze3d.platform.Monitor;
 import com.mojang.blaze3d.platform.VideoMode;
 import com.mojang.blaze3d.platform.Window;
 import net.deechael.concentration.ConcentrationConstants;
+import net.deechael.concentration.FullscreenMode;
 import net.deechael.concentration.fabric.ConcentrationFabricCaching;
-import net.deechael.concentration.fabric.config.ConcentrationConfig;
+import net.deechael.concentration.fabric.config.ConcentrationConfigFabric;
 import net.deechael.concentration.mixin.accessor.WindowAccessor;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
@@ -45,9 +46,7 @@ public class GLFWMixin {
         WindowAccessor accessor = (WindowAccessor) (Object) windowInstance;
 
         if (windowInstance != null && windowInstance.isFullscreen()) {
-            ConcentrationConfig config = ConcentrationConfig.getInstance();
-
-            ConcentrationConstants.LOGGER.info("Trying to switch to borderless fullscreen mode");
+            ConcentrationConfigFabric config = ConcentrationConfigFabric.getInstance();
 
             // If the game started with fullscreen mode, when switching to windowed mode, it will be forced to move to the primary monitor
             // Though size and position isn't be set at initialization, but I think the window should be at the initial monitor
@@ -59,6 +58,17 @@ public class GLFWMixin {
             ConcentrationFabricCaching.cacheSizeLock = true;
             ConcentrationConstants.LOGGER.info("Locked size caching");
 
+            if (config.fullscreen == FullscreenMode.NATIVE) {
+                ConcentrationConstants.LOGGER.info("Fullscreen mode is native, apply now!");
+                if (monitor == 0L)
+                    monitor = windowInstance.findBestMonitor().getMonitor();
+                finalExecute(window, monitor, xpos, ypos, width, height, -1);
+                ConcentrationConstants.LOGGER.info("================= [Concentration End] =================");
+                return;
+            }
+
+            ConcentrationConstants.LOGGER.info("Trying to switch to borderless fullscreen mode");
+
             // Get the monitor the user want to use and get the relative position in the system
             // The monitor is always non-null because when switching fullscreen mode, there must be a monitor to put the window
             Monitor monitorInstance = accessor.getScreenManager().getMonitor(monitor);
@@ -68,7 +78,7 @@ public class GLFWMixin {
             GLFW.glfwSetWindowAttrib(window, GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
             ConcentrationConstants.LOGGER.info("Trying to remove the title bar");
 
-            if (ConcentrationConfig.getInstance().customized) {
+            if (ConcentrationConfigFabric.getInstance().customized) {
 
                 ConcentrationConstants.LOGGER.info("Customization enabled, so replace the fullscreen size with customized size");
                 finalX = config.x + (config.related ? monitorInstance.getX() : 0);

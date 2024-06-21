@@ -5,5 +5,9 @@
   "concentration.config.customization.y": "Y Coordinate",
   "concentration.config.customization.width": "Width",
   "concentration.config.customization.height": "Height",
-  "concentration.option.apply": "Apply"
+  "concentration.option.apply": "Apply",
+  "concentration.option.fullscreen_mode": "Fullscreen Mode",
+  "concentration.option.fullscreen_mode.tooltip": "Fullscreen mode determines the fullscreen function using borderless fullscreen or native fullscreen.",
+  "concentration.option.fullscreen_mode.borderless": "Borderless",
+  "concentration.option.fullscreen_mode.native": "Native"
 }
