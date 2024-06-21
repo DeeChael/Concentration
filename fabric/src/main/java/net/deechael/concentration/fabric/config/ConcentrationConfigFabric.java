@@ -41,7 +41,7 @@ public class ConcentrationConfigFabric implements Config {
     public int y = 0;
     public int width = 800;
     public int height = 600;
-    public FullscreenMode fullscreen;
+    public FullscreenMode fullscreen = FullscreenMode.BORDERLESS;
 
     @Override
     public FullscreenMode getFullscreenMode() {
