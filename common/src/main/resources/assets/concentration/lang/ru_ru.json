@@ -1,0 +1,13 @@
+{
+  "concentration.config.customization.enabled": "Включить настройку",
+  "concentration.config.customization.related": "Отслеживать относительные координаты",
+  "concentration.config.customization.x": "Координата X",
+  "concentration.config.customization.y": "Координата Y",
+  "concentration.config.customization.width": "Ширина",
+  "concentration.config.customization.height": "Высота",
+  "concentration.option.apply": "Применить",
+  "concentration.option.fullscreen_mode": "Полноэкранный режим",
+  "concentration.option.fullscreen_mode.tooltip": "Определяет функцию полноэкранного режима: безрамочный режим или нативный полноэкранный режим.",
+  "concentration.option.fullscreen_mode.borderless": "Безрамочный",
+  "concentration.option.fullscreen_mode.native": "Нативный"
+}
